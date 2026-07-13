@@ -1,8 +1,8 @@
-"""Welcome page — title, mod description, start button."""
+"""Welcome page — title, language selector, mod description, start button."""
 from __future__ import annotations
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QCheckBox, QLabel, QVBoxLayout, QWizardPage
+from PySide6.QtWidgets import QCheckBox, QComboBox, QHBoxLayout, QLabel, QVBoxLayout, QWizardPage
 
 from .. import config, i18n
 from .theme import heading_font, body_font
@@ -19,6 +19,24 @@ class WelcomePage(QWizardPage):
         layout.setSpacing(14)
         layout.setContentsMargins(40, 30, 40, 30)
 
+        # Language selector (top right)
+        lang_row = QHBoxLayout()
+        lang_row.addStretch()
+        lang_label = QLabel("Language:")
+        lang_label.setStyleSheet("color: #999999; font-size: 10pt;")
+        lang_row.addWidget(lang_label)
+        self.lang_combo = QComboBox()
+        self.lang_combo.setMinimumWidth(180)
+        self.lang_combo.setStyleSheet(
+            "QComboBox { font-size: 10pt; padding: 4px 8px; }"
+        )
+        for code, name in i18n.get_available_languages().items():
+            self.lang_combo.addItem(name, code)
+        self.lang_combo.currentIndexChanged.connect(self._on_language_changed)
+        lang_row.addWidget(self.lang_combo)
+        layout.addLayout(lang_row)
+
+        # Title
         title = QLabel("GTA SAN ANDREAS\nSTORIES  1987")
         title.setProperty("heading", True)
         title.setFont(heading_font(38))
@@ -32,8 +50,9 @@ class WelcomePage(QWizardPage):
         subtitle.setStyleSheet("color: #3d8a3d; letter-spacing: 4px;")
         layout.addWidget(subtitle)
 
-        layout.addSpacing(20)
+        layout.addSpacing(10)
 
+        # Mod description
         body = QLabel(
             "<div style='line-height:160%;'>"
             + i18n.t("welcome_description").replace("\n", "<br>")
@@ -73,6 +92,29 @@ class WelcomePage(QWizardPage):
         footer.setWordWrap(True)
         footer.setAlignment(Qt.AlignCenter)
         layout.addWidget(footer)
+
+    def _on_language_changed(self, index):
+        """Update language when combo changes."""
+        lang_code = self.lang_combo.currentData()
+        if lang_code:
+            i18n.set_language(lang_code)
+            # Refresh all text on this page
+            self._refresh_texts()
+
+    def _refresh_texts(self):
+        """Update all text elements with current language."""
+        # Find and update labels
+        for child in self.findChildren(QLabel):
+            text = child.text()
+            # Update known texts
+            if "INSTALLER WIZARD" in text or "WIZARD" in text:
+                child.setText("// " + i18n.t("welcome_subheading") + "  v" + config.APP_VERSION)
+            elif "wizard builds" in text.lower() or "standalone" in text.lower():
+                child.setText(
+                    "<div style='line-height:160%;'>"
+                    + i18n.t("welcome_description").replace("\n", "<br>")
+                    + "</div>"
+                )
 
     def initializePage(self):
         # Store backup preference on the wizard

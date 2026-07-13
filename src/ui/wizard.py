@@ -8,7 +8,6 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWizard
 
 from .theme import SynthwaveBackground, COLOR_SUNSET_GOLD, COLOR_VCS_TEAL
-from .language_page import LanguagePage
 from .welcome_page import WelcomePage
 from .mod_source_page import ModSourcePage
 from .setup_page import SetupPage
@@ -17,7 +16,6 @@ from .install_page import InstallPage
 from .complete_page import CompletePage
 
 # Page IDs (must be imported by individual pages via .wizard)
-PAGE_LANGUAGE = 0
 PAGE_WELCOME = 1
 PAGE_MOD_SOURCE = 2
 PAGE_SETUP = 3
@@ -65,7 +63,6 @@ class InstallerWizard(SynthwaveBackground):
         self.setButton(QWizard.CustomButton1, credits_btn)
 
         # Add pages
-        self.setPage(PAGE_LANGUAGE, LanguagePage(self))
         self.setPage(PAGE_WELCOME, WelcomePage(self))
         self.setPage(PAGE_MOD_SOURCE, ModSourcePage(self))
         self.setPage(PAGE_SETUP, SetupPage(self))
@@ -73,7 +70,7 @@ class InstallerWizard(SynthwaveBackground):
         self.setPage(PAGE_INSTALL, InstallPage(self))
         self.setPage(PAGE_COMPLETE, CompletePage(self))
 
-        self.setStartId(PAGE_LANGUAGE)
+        self.setStartId(PAGE_WELCOME)
 
         # Load slideshow images
         self._load_slideshow_pool()
