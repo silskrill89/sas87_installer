@@ -1,8 +1,10 @@
 # GTA San Andreas Stories 1987 — Installer
 
-**One click. Full mod. Zero hassle.**
+**Built by the SAS 1987 Team. One click. Full mod. Zero hassle.**
 
 > The GTA San Andreas Stories 1987 mod is the total conversion you've been waiting for — full storyline, custom missions, new vehicles, the works. This installer gets you playing in minutes, not hours.
+
+*Made with love by the [GTA SAS 1987](https://gtasas.netlify.app/) team.*
 
 ---
 
@@ -97,13 +99,13 @@ python installer.py
 
 ## Credits
 
-This installer exists to make installing the **GTA San Andreas Stories 1987** mod easier. All credit for the mod belongs to its development team.
-
-**Mod credits:** See [CREDITS.md](CREDITS.md) for the full list of contributors.
-
-**Supporting mods:** CLEO 5, CLEO+, NewOpcodes, DYOM 8.1 — all credit to their respective authors.
+This installer was built by the **GTA SAS 1987 Team** to make installing our mod easier.
 
 **Official site:** [gtasas.netlify.app](https://gtasas.netlify.app/)
+
+**Full credits:** See [CREDITS.md](CREDITS.md) for the complete list of mod contributors and supporting mods.
+
+**Supporting mods:** CLEO 5, CLEO+, NewOpcodes, DYOM 8.1 — all credit to their respective authors.
 
 ---
 
