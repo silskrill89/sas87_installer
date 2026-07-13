@@ -15,10 +15,9 @@ block_cipher = None
 # --- Data files to bundle ---
 datas = [
     ('data', 'data'),
-    ('fonts', 'fonts'),
+    ('fonts/PricedownBl.otf', 'fonts'),
     ('src/ui/splash', 'src/ui/splash'),
     ('CREDITS.md', '.'),
-    ('CHANGELOG.md', '.'),
 ]
 
 # --- Python hidden imports (only what we actually use at runtime) ---
@@ -148,7 +147,8 @@ a = Analysis(
         'PySide6.QtQuick3D', 'PySide6.QtQuickControls2',
         'PySide6.QtQuickTest', 'PySide6.QtQuickWidgets',
         'PySide6.QtDBus', 'PySide6.QtNetwork',
-        'PySide6.QtQml',
+        'PySide6.QtQml', 'PySide6.QtQmlModels', 'PySide6.QtQmlWorkerScript',
+        'PySide6.QtShaderTools',
         # === PIL / Pillow — save raw images instead (~14 MB savings) ===
         'PIL',
         'PIL.Image',
@@ -161,6 +161,9 @@ a = Analysis(
         'pydoc', 'pdb', 'profile', 'cProfile',
         'xmlrpc', 'wsgiref',
         'py_compile', 'compileall',
+        'multiprocessing.popen_spawn_posix',
+        'multiprocessing.popen_forkserver',
+        'multiprocessing.resource_tracker',
     ],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
@@ -173,21 +176,28 @@ pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 exe = EXE(
     pyz,
     a.scripts,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
     [],
+    exclude_binaries=True,
     name='GTA_SAS_1987_Installer',
     debug=False,
     bootloader_ignore_signals=False,
     strip=True,
     upx=True,
-    upx_exclude=['qwindows.dll', 'qjpeg.dll', 'qico.dll'],
-    runtime_tmpdir=None,
     console=False,
     disable_windowed_traceback=False,
     target_arch='x86_64',
     codesign_identity=None,
     entitlements_file=None,
     icon='src/resources/icon.ico' if os.path.exists('src/resources/icon.ico') else None,
+)
+
+coll = COLLECT(
+    exe,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+    strip=True,
+    upx=True,
+    upx_exclude=[],
+    name='GTA_SAS_1987_Installer',
 )

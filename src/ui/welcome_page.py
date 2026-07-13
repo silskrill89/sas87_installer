@@ -11,6 +11,41 @@ from .theme import heading_font, body_font
 class UpwardComboBox(QComboBox):
     """QComboBox that opens its popup upward instead of downward."""
 
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        # Style the popup list
+        self.setView(QListView())
+        self.setStyleSheet("""
+            QComboBox {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+                border: 1px solid #f0c060;
+                border-radius: 4px;
+                padding: 4px 8px;
+                font-size: 10pt;
+            }
+            QComboBox:hover {
+                border-color: #00d4aa;
+            }
+            QComboBox::drop-down {
+                border: 0;
+                width: 20px;
+                background: #1a1a2e;
+            }
+            QComboBox QAbstractItemView {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+                selection-background-color: #00d4aa;
+                selection-color: #ffffff;
+                border: 1px solid #f0c060;
+                outline: 0;
+            }
+            QComboBox QAbstractItemView::item {
+                padding: 6px 12px;
+                min-height: 24px;
+            }
+        """)
+
     def showPopup(self):
         # Position popup above the combo box
         popup = self.view()
@@ -32,22 +67,6 @@ class WelcomePage(QWizardPage):
         layout = QVBoxLayout(self)
         layout.setSpacing(14)
         layout.setContentsMargins(40, 30, 40, 30)
-
-        # Title
-        title = QLabel("GTA SAN ANDREAS\nSTORIES  1987")
-        title.setProperty("heading", True)
-        title.setFont(heading_font(38))
-        title.setAlignment(Qt.AlignCenter)
-        title.setStyleSheet("color: #ff6a2b;")
-        layout.addWidget(title)
-
-        subtitle = QLabel("// " + i18n.t("welcome_subheading") + "  v" + config.APP_VERSION)
-        subtitle.setProperty("subheading", True)
-        subtitle.setAlignment(Qt.AlignCenter)
-        subtitle.setStyleSheet("color: #3d8a3d; letter-spacing: 4px;")
-        layout.addWidget(subtitle)
-
-        layout.addSpacing(10)
 
         # Title
         title = QLabel("GTA SAN ANDREAS\nSTORIES  1987")

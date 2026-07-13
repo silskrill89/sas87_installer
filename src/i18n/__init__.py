@@ -34,7 +34,7 @@ _DEFAULTS: dict[str, str] = {
     "welcome_title": "WELCOME",
     "welcome_heading": "GTA San Andreas Stories 1987",
     "welcome_subheading": "Installer Wizard",
-    "welcome_description": "This wizard will install the GTA San Andreas Stories 1987 total-conversion mod.\n\nThe mod provides its own exe — works with any version of GTA San Andreas.",
+    "welcome_description": "This wizard will install the GTA San Andreas Stories 1987 total-conversion mod.\n\nWorks with any version of GTA San Andreas.",
     "welcome_backup": "Create backup before installing",
     "welcome_backup_desc": "Recommended — backs up your fresh install before applying mods.",
 
