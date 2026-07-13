@@ -83,7 +83,7 @@ python installer.py
 
 ## Requirements
 
-- **GTA San Andreas** — v1.0 HOODLUM recommended (the mod includes its own exe)
+- **GTA San Andreas** — any version works (the mod provides its own exe)
 - **Python 3.10+** — only needed if running from source
 - **7-Zip or WinRAR** — for .rar extraction (optional)
 
