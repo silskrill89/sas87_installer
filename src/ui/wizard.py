@@ -85,6 +85,9 @@ class InstallerWizard(SynthwaveBackground):
         # Repaint when page changes + re-scale fonts for new page
         self.currentIdChanged.connect(self._on_page_changed)
 
+        # Emit language_changed signal when page is initialized
+        self.currentIdChanged.connect(self._emit_language_on_page_change)
+
     def showEvent(self, event):
         super().showEvent(event)
         self._reposition_credits_btn()
@@ -148,6 +151,12 @@ class InstallerWizard(SynthwaveBackground):
         self.update()
         from PySide6.QtCore import QTimer
         QTimer.singleShot(10, self._scale_fonts_to_window)
+
+    def _emit_language_on_page_change(self, page_id):
+        """Emit language_changed signal when a page is initialized."""
+        from .. import i18n
+        # Emit signal so the new page can refresh its text
+        self.language_changed.emit(i18n.get_language())
 
     def _open_credits(self):
         from .credits_window import open_credits
