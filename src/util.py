@@ -17,9 +17,21 @@ def open_in_file_manager(path: str) -> None:
 
 
 def open_file(path: str) -> None:
-    """Open a file with the system default application (cross-platform)."""
+    """Open a file with the system default application (cross-platform).
+
+    For executables, uses subprocess.Popen to launch as independent process.
+    For other files, uses os.startfile (Windows) or open (Mac/Linux).
+    """
     if sys.platform == "win32":
-        os.startfile(path)  # type: ignore[attr-defined]
+        # Check if it's an executable - launch as independent process
+        if path.lower().endswith(".exe"):
+            subprocess.Popen(
+                [path],
+                cwd=os.path.dirname(path),
+                creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
+            )
+        else:
+            os.startfile(path)  # type: ignore[attr-defined]
     elif sys.platform == "darwin":
         subprocess.Popen(["open", path])
     else:
