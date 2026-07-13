@@ -1,6 +1,6 @@
 """Translation system for the GTA SAS 1987 Installer.
 
-Supports: English, Arabic, Spanish, Portuguese, Czech, Russian, Persian (Farsi)
+Supports: English, Arabic, Spanish (LATAM), Portuguese (BR), Czech, Russian, Persian (Farsi), Turkish, Italian
 """
 from __future__ import annotations
 
@@ -15,11 +15,13 @@ _translations: dict[str, str] = {}
 LANGUAGES = {
     "en": "English",
     "ar": "العربية (Arabic)",
-    "es": "Español (Spanish)",
-    "pt": "Português (Portuguese)",
+    "es": "Español LATAM (Spanish)",
+    "pt": "Português BR (Portuguese)",
     "cs": "Čeština (Czech)",
     "ru": "Русский (Russian)",
     "fa": "فارسی (Persian/Farsi)",
+    "tr": "Türkçe (Turkish)",
+    "it": "Italiano (Italian)",
 }
 
 # Default English strings
