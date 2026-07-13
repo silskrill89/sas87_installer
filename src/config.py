@@ -16,7 +16,7 @@ from typing import List, Optional
 # ----------------------------------------------------------------------
 APP_NAME = "GTA San Andreas Stories 1987 — Installer"
 APP_SHORT = "GTA SAS 1987 Installer"
-APP_VERSION = "5.0.2.0"
+APP_VERSION = "2607.0"  # CalVer: YYMM.patch (July 2026)
 APP_AUTHOR = "Fan-made installer"
 
 # OS detection — used throughout the codebase for cross-platform logic
