@@ -34,7 +34,10 @@ def exe_name(name: str) -> str:
 
 
 def sa_exe_names() -> list[str]:
-    """Return all possible SA executable names for the current platform."""
+    """Return all possible SA executable names for the current platform.
+
+    Priority: gta_sa.exe (mod provides this) > gta-sa.exe (Steam)
+    """
     names = ["gta_sa", "gta-sa"]
     if sys.platform == "win32":
         return [n + ".exe" for n in names]

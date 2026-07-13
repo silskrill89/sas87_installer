@@ -37,8 +37,29 @@ class CompletePage(QWizardPage):
 
         btn_row = QHBoxLayout()
 
-        launch_btn = QPushButton("Launch GTA SA")
-        launch_btn.setProperty("primary", True)
+        launch_btn = QPushButton("Play GTA San Andreas Stories 1987")
+        launch_btn.setProperty("accent", True)
+        launch_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #3d8a3d;
+                color: #ffffff;
+                border: 2px solid #5fc45f;
+                border-radius: 8px;
+                padding: 12px 32px;
+                font-size: 14pt;
+                font-weight: bold;
+                min-width: 280px;
+                text-shadow: 0 0 10px #5fc45f;
+            }
+            QPushButton:hover {
+                background-color: #5fc45f;
+                border-color: #7fff7f;
+                color: #0a0a0f;
+            }
+            QPushButton:pressed {
+                background-color: #2d6a2d;
+            }
+        """)
         launch_btn.clicked.connect(self._launch)
         btn_row.addWidget(launch_btn)
 
@@ -84,21 +105,22 @@ class CompletePage(QWizardPage):
 
         self.summary.setText(
             "<div style='line-height:160%;'>"
-            "<span style='color:#5bff8a;font-size:14pt;'>OK All stages completed.</span><br><br>"
+            "<span style='color:#5bff8a;font-size:14pt;'>All stages completed successfully!</span><br><br>"
             "<b>Source (vanilla SA):</b> <code>" + str(source_sa) + "</code><br>"
             "<b>Modded install:</b> <code>" + self._dest_sa_root + "</code><br>"
             "<b>Mods installed:</b> " + (", ".join(installed) if installed else "(none - check log)") + "<br>"
             "<b>Install log:</b> <code>" + log_path + "</code><br>"
             "<b>Backup location:</b> <code>" + cache.CACHE_BACKUPS + "</code><br><br>"
-            "Click <b>Launch GTA SA</b> to start the game from the new modded folder, "
-            "or use the buttons below to open the install folder or restore-files cache."
+            "Click <b>Play GTA San Andreas Stories 1987</b> to start the game, "
+            "or use the buttons below to open the install folder."
             "</div>"
         )
 
     def _launch(self):
         if not self._dest_sa_root:
             return
-        for name in util.sa_exe_names():
+        # Priority: gta_sa.exe (mod provides this) > gta-sa.exe (Steam)
+        for name in ["gta_sa.exe", "gta-sa.exe"]:
             exe = os.path.join(self._dest_sa_root, name)
             if os.path.isfile(exe):
                 util.open_file(exe)
