@@ -117,4 +117,4 @@ This is a **fan-made installer** — not affiliated with Rockstar Games or Take-
 - The installer downloads mods from official sources at install time
 - No copyrighted content is distributed with the installer itself
 
-**Questions?** Open an issue or join the [Discord](https://discord.gg/t5SjMrAJNh).
+**Questions?** Open an issue or join the [Discord](https://discord.gg/DbVQqJqYg7).
