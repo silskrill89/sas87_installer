@@ -31,6 +31,12 @@ cache/backups/
 cache/screenshots/
 cache/logs/
 
+# Runtime settings (user-specific)
+installer_settings.json
+
+# Screenshots (regenerable)
+screenshots/
+
 # Build artifacts
 *.spec.bak
 *.log

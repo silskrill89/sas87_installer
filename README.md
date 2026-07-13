@@ -6,15 +6,6 @@ A standalone installer for the **GTA San Andreas Stories 1987** total-conversion
 
 ---
 
-## General Information
-
-- **Website:** https://gtasas.netlify.app/
-- **Discord:** https://discord.gg/DbVQqJqYg7
-- **Source code:** https://github.com/silskrill89/sas87_installer
-- **Issue tracker:** https://github.com/silskrill89/sas87_installer/issues
-
----
-
 ## What is this?
 
 Installing GTA mods shouldn't require a CS degree. This wizard takes you from a clean GTA San Andreas install to a fully modded, story-ready setup without touching a single config file.
@@ -28,10 +19,6 @@ Installing GTA mods shouldn't require a CS degree. This wizard takes you from a 
 ---
 
 ## How it works
-
-```
-Pick your SA folder → Auto-detect & download → Copy & install → Play
-```
 
 1. Point to your GTA San Andreas install (auto-detected from Steam, registry, or common paths)
 2. Pick where you want the modded version to live
@@ -86,23 +73,21 @@ python installer.py
 python -m PyInstaller installer.spec --noconfirm
 ```
 
-Output: `dist/GTA_SAS_1987_Installer.exe`
+### Build a release archive
 
----
-
-## License
-
-This is a **fan-made installer** — not affiliated with Rockstar Games or Take-Two Interactive.
-
-- You need a legal copy of GTA San Andreas to use this
-- The installer downloads mods from official sources at install time
-- No copyrighted content is distributed with the installer itself
+```bash
+python tools/build_release.py
+```
 
 ---
 
 ## Credits
 
-This installer was built by the **GTA SAS 1987 Team** to make installing our mod easier.
+**Built by the GTA SAS 1987 Team**
+
+**Official site:** [gtasas.netlify.app](https://gtasas.netlify.app/)
+
+**Full credits:** See [CREDITS.md](CREDITS.md) for the complete list.
 
 ### Project Lead
 
@@ -127,7 +112,6 @@ This installer was built by the **GTA SAS 1987 Team** to make installing our mod
 ### CLEO Library
 
 - Seemann — CLEO Library creator
-- Alien, Deji, LINK/2012 — CLEO for GTA SA
 
 ### CLEO+
 
@@ -141,23 +125,25 @@ This installer was built by the **GTA SAS 1987 Team** to make installing our mod
 
 - Rockstar Games — For creating GTA San Andreas
 - The GTA modding community — For keeping this game alive
-- GTAForums.com — Community hub
 
 ### Built with
 
 - PySide6 (Qt6) — Cross-platform GUI
 - Pricedown Bl — The actual GTA logo font (free for commercial use)
-- Vice City Stories palette — Dark greens, neon accents, sunset vibes
 
 ### AI Assistance
-
-This installer was built with the help of:
 
 - [MiMo v2.5](https://github.com/XiaomiMiMo/MiMo) — AI model
 - [MiMoCode](https://github.com/XiaomiMiMo/MiMoCode) — AI coding assistant
 
-Share your creations in the MiMoCode Discord showcase!
-
 ---
 
-*See [CREDITS.md](CREDITS.md) for the complete list of contributors and supporting mods.*
+## License
+
+This is a **fan-made installer** — not affiliated with Rockstar Games or Take-Two Interactive.
+
+- You need a legal copy of GTA San Andreas to use this
+- The installer downloads mods from official sources at install time
+- No copyrighted content is distributed with the installer itself
+
+**Questions?** Open an issue or join the [Discord](https://discord.gg/DbVQqJqYg7).
