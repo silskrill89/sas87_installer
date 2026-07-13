@@ -80,7 +80,6 @@ FIXED:
 CHANGED:
 - SynthwaveBackground uses smoothstep easing for jitter-free parallax movement
 - Two-layer parallax: FG (sharp, 45% opacity) + BG (inpainted, 35% opacity)
-- bake_layers.py: pre-bakes FG/BG layers at build time using rembg + OpenCV inpainting
 - "Open Save Folder" button validates download page was opened first
 - CREDITS button moved to wizard bottom bar (same line as BACK/NEXT/CANCEL)
 
