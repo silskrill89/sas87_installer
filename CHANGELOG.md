@@ -102,7 +102,7 @@ FIXED:
   - PySide6 font loading crash (access violation) — deferred QFontDatabase to apply_theme()
   - scraper.py _with_url() was dropping manual_download_required and other fields
   - sa_detector.py referenced non-existent config constants
-  - gamecopyworld.py had redundant local imports
+  - Removed unused local imports
   - installer_stages.py had duplicated URL-to-extension logic
   - Duplicate QWizard import in theme.py
 
@@ -131,7 +131,7 @@ NEW:
   - Initial release
   - Full installer wizard: source detection, copy, backup, mod install
   - Auto-detection of GTA San Andreas install (registry, Steam, common paths)
-  - NO-CD patch auto-download from GameCopyWorld
+  - Mod provides its own exe (no NO-CD needed)
   - MediaFire resolver for main mod download
   - GitHub release resolver for CLEO 5
   - Mod selection page with optional/required toggles
