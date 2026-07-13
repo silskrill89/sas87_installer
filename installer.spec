@@ -17,7 +17,6 @@ datas = [
     ('data', 'data'),
     ('fonts', 'fonts'),
     ('src/ui/splash', 'src/ui/splash'),
-    ('src/ui/splash_layers', 'src/ui/splash_layers'),
     ('CREDITS.md', '.'),
     ('CHANGELOG.md', '.'),
 ]
