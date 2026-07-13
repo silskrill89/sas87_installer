@@ -10,8 +10,8 @@ import os
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QCheckBox, QGridLayout, QGroupBox, QHBoxLayout, QLabel,
-    QPushButton, QVBoxLayout, QWizardPage,
+    QButtonGroup, QCheckBox, QGridLayout, QGroupBox, QHBoxLayout, QLabel,
+    QPushButton, QRadioButton, QVBoxLayout, QWizardPage,
 )
 
 from .. import config, extractor, scraper
@@ -27,6 +27,8 @@ class PrereqsPage(QWizardPage):
 
         self._mod_sources: list[config.ModSource] = []
         self._checkboxes: dict[str, QCheckBox] = {}
+        self._dyom_radios: dict[str, QRadioButton] = {}
+        self._dyom_group: QButtonGroup | None = None
         self._found_archives: dict[str, str] = {}
         self._download_buttons: dict[str, QPushButton] = {}
 
@@ -120,6 +122,8 @@ class PrereqsPage(QWizardPage):
             if w:
                 w.deleteLater()
         self._checkboxes.clear()
+        self._dyom_radios.clear()
+        self._dyom_group = None
         self._found_archives.clear()
         self._download_buttons.clear()
 
@@ -198,6 +202,19 @@ class PrereqsPage(QWizardPage):
                 cb = QCheckBox()
                 cb.setChecked(True)
                 cb.setEnabled(False)
+                self._checkboxes[mod.id] = cb
+            elif mod.id in ("dyom", "dyom_v83"):
+                # DYOM versions use radio buttons (only one can be selected)
+                name_lbl = QLabel(mod.name)
+                rb = QRadioButton()
+                rb.setChecked(mod.enabled_by_default)
+                rb.setProperty("mod_id", mod.id)
+                # Create group on first DYOM mod
+                if self._dyom_group is None:
+                    self._dyom_group = QButtonGroup(self)
+                    self._dyom_group.setExclusive(True)
+                self._dyom_group.addButton(rb)
+                self._dyom_radios[mod.id] = rb
             else:
                 name_lbl = QLabel(mod.name)
                 cb = QCheckBox()
@@ -205,6 +222,7 @@ class PrereqsPage(QWizardPage):
                 if not mod.optional:
                     cb.setEnabled(False)
                     cb.setChecked(True)
+                self._checkboxes[mod.id] = cb
 
             # Status
             if has_file:
@@ -250,7 +268,6 @@ class PrereqsPage(QWizardPage):
             self.grid.addWidget(name_lbl, i, 0)
             self.grid.addWidget(status_lbl, i, 1)
             self.grid.addWidget(action_btn, i, 2)
-            self._checkboxes[mod.id] = cb
 
         # Status summary
         missing = [m for m in self._mod_sources if m.id not in self._found_archives]
@@ -300,47 +317,17 @@ class PrereqsPage(QWizardPage):
 
     # ------------------------------------------------------------------
     def validatePage(self):
-        # If both DYOM versions are found, ask user to pick one
-        self._resolve_dyom_conflict()
-
         enabled = [mid for mid, cb in self._checkboxes.items() if cb.isChecked()]
+
+        # Add selected DYOM version from radio buttons
+        for mid, rb in self._dyom_radios.items():
+            if rb.isChecked():
+                enabled.append(mid)
+
         self.wizard().setProperty("enabled_mod_ids", enabled)
         self.wizard().setProperty("mod_sources", self._mod_sources)
         self.wizard().setProperty("found_archives", self._found_archives)
         return True
-
-    def _resolve_dyom_conflict(self):
-        """If both DYOM 8.1 and 8.3 are found, prompt user to pick one."""
-        has_81 = "dyom" in self._found_archives
-        has_83 = "dyom_v83" in self._found_archives
-        if not (has_81 and has_83):
-            return
-
-        from PySide6.QtWidgets import QMessageBox
-        reply = QMessageBox.question(
-            self,
-            "DYOM Version Conflict",
-            "Both DYOM 8.1 and DYOM 8.3 were found.\n\n"
-            "DYOM 8.1 — Recommended stable version\n"
-            "DYOM 8.3 — Alpha, may have bugs\n\n"
-            "Which version do you want to install?",
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.Yes,
-        )
-        if reply == QMessageBox.Yes:
-            # User chose 8.1 — remove 8.3
-            self._found_archives.pop("dyom_v83", None)
-            # Uncheck dyom_v83 if it's checked
-            if "dyom_v83" in self._checkboxes:
-                self._checkboxes["dyom_v83"].setChecked(False)
-        else:
-            # User chose 8.3 — remove 8.1
-            self._found_archives.pop("dyom", None)
-            if "dyom" in self._checkboxes:
-                self._checkboxes["dyom"].setChecked(False)
-
-        # Rebuild the display
-        self._rescrape(silent=True)
 
     def nextId(self):
         from .wizard import PAGE_INSTALL
