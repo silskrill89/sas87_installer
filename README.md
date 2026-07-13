@@ -62,52 +62,41 @@ Installing GTA mods shouldn't require a CS degree. We built this wizard so you c
 
 ## Quick start
 
-### For players
-
 1. **Download** the latest release
-2. **Extract** anywhere
-3. **Double-click** `run.bat` (or `GTA_SAS_1987_Installer.exe` if you have the portable build)
-4. **Follow** the 4-step wizard
-5. **Play**
+2. **Double-click** `GTA_SAS_1987_Installer.exe`
+3. **Follow** the 4-step wizard
+4. **Play**
 
-> **Requires:** GTA San Andreas (v1.0 HOODLUM recommended). The mod provides its own exe.
-
-### For developers
-
-```bash
-git clone https://github.com/silskrill89/sas87_installer.git
-cd sas87_installer
-pip install -r requirements.txt
-python installer.py
-```
+> **Requires:** GTA San Andreas (any version — the mod provides its own exe)
 
 ---
 
 ## Requirements
 
 - **GTA San Andreas** — any version works (the mod provides its own exe)
-- **Python 3.10+** — only needed if running from source
-- **7-Zip or WinRAR** — for .rar extraction (optional)
-
----
-
-## Built with
-
-- **PySide6 (Qt6)** — cross-platform GUI
-- **Pricedown Bl** — the actual GTA logo font (free for commercial use)
-- **Vice City Stories palette** — dark greens, neon accents, sunset vibes
+- **Windows 7+** (x64)
 
 ---
 
 ## Credits
 
-This installer was built by the **GTA SAS 1987 Team** to make installing our mod easier.
+**Built by the GTA SAS 1987 Team**
 
 **Official site:** [gtasas.netlify.app](https://gtasas.netlify.app/)
 
 **Full credits:** See [CREDITS.md](CREDITS.md) for the complete list of mod contributors and supporting mods.
 
 **Supporting mods:** CLEO 5, CLEO+, NewOpcodes, DYOM 8.1 — all credit to their respective authors.
+
+**Built with:**
+- PySide6 (Qt6) — cross-platform GUI
+- Pricedown Bl — the actual GTA logo font (free for commercial use)
+- Vice City Stories palette — dark greens, neon accents, sunset vibes
+
+**Special thanks:**
+- [MiMo v2.5](https://github.com/XiaomiMiMo/MiMo) — AI model used during development
+- [MiMoCode](https://github.com/XiaomiMiMo/MiMoCode) — AI coding assistant used to build this installer
+- Share your creations in the MiMoCode Discord showcase!
 
 ---
 
@@ -120,3 +109,14 @@ This is a **fan-made installer** — not affiliated with Rockstar Games or Take-
 - No copyrighted content is distributed with the installer itself
 
 **Questions?** Open an issue or join the [Discord](https://discord.gg/DbVQqJqYg7).
+
+---
+
+## For developers
+
+```bash
+git clone https://github.com/silskrill89/sas87_installer.git
+cd sas87_installer
+pip install -r requirements.txt
+python installer.py
+```
