@@ -56,7 +56,6 @@ class ModSourcePage(QWizardPage):
             "<span style='color:#7a6a9b'>You have .zip / .rar / .7z archives of the mods "
             "already. The wizard will scan a folder and use them instead of downloading.</span>"
         )
-        self.rb_have.setStyleSheet("QRadioButton::indicator { width: 20px; height: 20px; }")
         choice_layout.addWidget(self.rb_have)
 
         self.rb_download = QRadioButton(
@@ -64,7 +63,6 @@ class ModSourcePage(QWizardPage):
             "<span style='color:#7a6a9b'>The wizard will fetch the main mod from MediaFire "
             "and prerequisites from GitHub/MixMods.</span>"
         )
-        self.rb_download.setStyleSheet("QRadioButton::indicator { width: 20px; height: 20px; }")
         choice_layout.addWidget(self.rb_download)
 
         # Default: download (the common case)
