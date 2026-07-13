@@ -4,7 +4,7 @@ from __future__ import annotations
 import os
 import random
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QWizard
 
 from .theme import SynthwaveBackground, COLOR_SUNSET_GOLD, COLOR_VCS_TEAL
@@ -26,6 +26,9 @@ PAGE_COMPLETE = 9
 
 class InstallerWizard(SynthwaveBackground):
     """The main wizard window. Inherits the painted GTA SA sunset background."""
+
+    # Signal emitted when language changes
+    language_changed = Signal(str)
 
     def __init__(self, parent=None):
         super().__init__(parent)

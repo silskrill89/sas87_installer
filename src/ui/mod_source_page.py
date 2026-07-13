@@ -18,7 +18,7 @@ from PySide6.QtWidgets import (
     QRadioButton, QVBoxLayout, QWizardPage, QButtonGroup,
 )
 
-from .. import config, extractor
+from .. import config, extractor, i18n
 from .theme import browse_folder
 
 
@@ -33,36 +33,31 @@ class ModSourcePage(QWizardPage):
         layout.setSpacing(14)
         layout.setContentsMargins(40, 30, 40, 30)
 
-        title = QLabel("MOD  SOURCE")
-        title.setProperty("subheading", True)
-        layout.addWidget(title)
+        # Title
+        self._title = QLabel(i18n.t("mod_source_title"))
+        self._title.setProperty("subheading", True)
+        layout.addWidget(self._title)
 
-        intro = QLabel(
+        # Intro text
+        self._intro = QLabel(
             "<div style='line-height:150%;'>"
-            "Do you already have the mod files downloaded on your computer, "
-            "or should the wizard download them for you?"
-            "</div>"
+            + i18n.t("mod_source_intro")
+            + "</div>"
         )
-        intro.setWordWrap(True)
-        intro.setTextFormat(Qt.RichText)
-        layout.addWidget(intro)
+        self._intro.setWordWrap(True)
+        self._intro.setTextFormat(Qt.RichText)
+        layout.addWidget(self._intro)
 
         # --- Radio choices ---
-        choice_box = QGroupBox("Choose one")
-        choice_layout = QVBoxLayout(choice_box)
+        self._choice_box = QGroupBox(i18n.t("mod_source_choose"))
+        choice_layout = QVBoxLayout(self._choice_box)
 
-        self.rb_have = QRadioButton("I already have mod files")
-        self.rb_have.setToolTip(
-            "You have .zip / .rar / .7z archives of the mods already. "
-            "The wizard will scan a folder and use them instead of downloading."
-        )
+        self.rb_have = QRadioButton(i18n.t("mod_source_have"))
+        self.rb_have.setToolTip(i18n.t("mod_source_have_desc"))
         choice_layout.addWidget(self.rb_have)
 
-        self.rb_download = QRadioButton("Download everything for me")
-        self.rb_download.setToolTip(
-            "The wizard will fetch the main mod from MediaFire "
-            "and prerequisites from GitHub/MixMods."
-        )
+        self.rb_download = QRadioButton(i18n.t("mod_source_download"))
+        self.rb_download.setToolTip(i18n.t("mod_source_download_desc"))
         choice_layout.addWidget(self.rb_download)
 
         # Default: download (the common case)
@@ -79,23 +74,18 @@ class ModSourcePage(QWizardPage):
         self.arch_box = QGroupBox("Archives folder")
         arch_layout = QVBoxLayout(self.arch_box)
 
-        arch_hint = QLabel(
-            "Point the wizard at the folder containing your mod archives. "
-            "It will scan for .zip / .rar / .7z and use them instead of downloading."
-        )
-        arch_hint.setProperty("dim", True)
-        arch_hint.setWordWrap(True)
-        arch_layout.addWidget(arch_hint)
+        self._arch_hint = QLabel(i18n.t("mod_source_archives_desc"))
+        self._arch_hint.setProperty("dim", True)
+        self._arch_hint.setWordWrap(True)
+        arch_layout.addWidget(self._arch_hint)
 
         row = QHBoxLayout()
         self.arch_edit = QLineEdit()
         self.arch_edit.setPlaceholderText(
-            "e.g.  /home/user/Downloads/GTA SAS 1987 mods"
-            if not config.IS_WINDOWS else
             "e.g.  D:\\Downloads\\GTA SAS 1987 mods"
         )
         row.addWidget(self.arch_edit, 1)
-        browse_btn = QPushButton("Browse...")
+        browse_btn = QPushButton(i18n.t("mod_source_browse"))
         browse_btn.clicked.connect(self._browse_archives)
         row.addWidget(browse_btn)
         arch_layout.addLayout(row)
@@ -106,12 +96,10 @@ class ModSourcePage(QWizardPage):
         layout.addWidget(self.arch_box)
 
         # --- Downloads folder scan (always visible) ---
-        dl_box = QGroupBox("Downloads folder")
-        dl_layout = QVBoxLayout(dl_box)
+        self._dl_box = QGroupBox(i18n.t("mod_source_downloads"))
+        dl_layout = QVBoxLayout(self._dl_box)
 
-        self.scan_dl_cb = QCheckBox(
-            "Scan my Downloads folder for mod files"
-        )
+        self.scan_dl_cb = QCheckBox(i18n.t("mod_source_scan"))
         self.scan_dl_cb.setChecked(True)
         self.scan_dl_cb.setToolTip(
             "The wizard will look in your Downloads folder for mod files "
@@ -125,7 +113,7 @@ class ModSourcePage(QWizardPage):
         self.dl_edit.setText(default_dl)
         self.dl_edit.setPlaceholderText("e.g.  C:\\Users\\You\\Downloads")
         dl_row.addWidget(self.dl_edit, 1)
-        dl_browse = QPushButton("Browse...")
+        dl_browse = QPushButton(i18n.t("mod_source_browse"))
         dl_browse.clicked.connect(self._browse_downloads)
         dl_row.addWidget(dl_browse)
         dl_layout.addLayout(dl_row)
@@ -217,3 +205,22 @@ class ModSourcePage(QWizardPage):
     def nextId(self):
         from .wizard import PAGE_SETUP
         return PAGE_SETUP
+
+    def initializePage(self):
+        """Connect to wizard's language_changed signal."""
+        self.wizard().language_changed.connect(self._on_language_changed)
+
+    def _on_language_changed(self, lang_code):
+        """Update all text when language changes."""
+        self._title.setText(i18n.t("mod_source_title"))
+        self._intro.setText(
+            "<div style='line-height:150%;'>"
+            + i18n.t("mod_source_intro")
+            + "</div>"
+        )
+        self._choice_box.setTitle(i18n.t("mod_source_choose"))
+        self.rb_have.setText(i18n.t("mod_source_have"))
+        self.rb_download.setText(i18n.t("mod_source_download"))
+        self._arch_hint.setText(i18n.t("mod_source_archives_desc"))
+        self._dl_box.setTitle(i18n.t("mod_source_downloads"))
+        self.scan_dl_cb.setText(i18n.t("mod_source_scan"))

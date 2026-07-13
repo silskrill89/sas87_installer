@@ -38,7 +38,7 @@ class WelcomePage(QWizardPage):
         layout.setSpacing(14)
         layout.setContentsMargins(40, 30, 40, 30)
 
-        # Title
+        # Title (fixed - doesn't change with language)
         title = QLabel("GTA SAN ANDREAS\nSTORIES  1987")
         title.setProperty("heading", True)
         title.setFont(heading_font(38))
@@ -46,26 +46,27 @@ class WelcomePage(QWizardPage):
         title.setStyleSheet("color: #ff6a2b;")
         layout.addWidget(title)
 
-        subtitle = QLabel("// " + i18n.t("welcome_subheading") + "  v" + config.APP_VERSION)
-        subtitle.setProperty("subheading", True)
-        subtitle.setAlignment(Qt.AlignCenter)
-        subtitle.setStyleSheet("color: #3d8a3d; letter-spacing: 4px;")
-        layout.addWidget(subtitle)
+        # Subtitle (changes with language)
+        self._subtitle = QLabel("// " + i18n.t("welcome_subheading") + "  v" + config.APP_VERSION)
+        self._subtitle.setProperty("subheading", True)
+        self._subtitle.setAlignment(Qt.AlignCenter)
+        self._subtitle.setStyleSheet("color: #3d8a3d; letter-spacing: 4px;")
+        layout.addWidget(self._subtitle)
 
         layout.addSpacing(10)
 
-        # Mod description
-        body = QLabel(
+        # Mod description (changes with language)
+        self._body = QLabel(
             "<div style='line-height:160%;'>"
             + i18n.t("welcome_description").replace("\n", "<br>")
             + "</div>"
         )
-        body.setWordWrap(True)
-        body.setAlignment(Qt.AlignLeft)
-        body.setFont(body_font(10))
-        layout.addWidget(body)
+        self._body.setWordWrap(True)
+        self._body.setAlignment(Qt.AlignLeft)
+        self._body.setFont(body_font(10))
+        layout.addWidget(self._body)
 
-        # Backup option
+        # Backup option (changes with language)
         layout.addSpacing(10)
         self.backup_cb = QCheckBox(i18n.t("welcome_backup"))
         self.backup_cb.setChecked(False)
@@ -75,14 +76,15 @@ class WelcomePage(QWizardPage):
         )
         layout.addWidget(self.backup_cb)
 
-        backup_hint = QLabel(
+        # Backup hint (changes with language)
+        self._backup_hint = QLabel(
             "<span style='color:#7a6a9b; font-size:9pt;'>"
             + i18n.t("welcome_backup_desc")
             + "</span>"
         )
-        backup_hint.setWordWrap(True)
-        backup_hint.setTextFormat(Qt.RichText)
-        layout.addWidget(backup_hint)
+        self._backup_hint.setWordWrap(True)
+        self._backup_hint.setTextFormat(Qt.RichText)
+        layout.addWidget(self._backup_hint)
 
         layout.addStretch()
 
@@ -99,7 +101,7 @@ class WelcomePage(QWizardPage):
         lang_row.addStretch()
         layout.addLayout(lang_row)
 
-        # Footer
+        # Footer (fixed)
         footer = QLabel(
             "Fan-made installer. Not affiliated with Rockstar Games or Take-Two. "
             "You must own a legal copy of GTA San Andreas."
@@ -116,21 +118,27 @@ class WelcomePage(QWizardPage):
             i18n.set_language(lang_code)
             # Refresh all text on this page
             self._refresh_texts()
+            # Emit signal to wizard for other pages
+            self.wizard().language_changed.emit(lang_code)
 
     def _refresh_texts(self):
-        """Update all text elements with current language."""
-        # Find and update labels
-        for child in self.findChildren(QLabel):
-            text = child.text()
-            # Update known texts
-            if "INSTALLER WIZARD" in text or "WIZARD" in text:
-                child.setText("// " + i18n.t("welcome_subheading") + "  v" + config.APP_VERSION)
-            elif "wizard builds" in text.lower() or "standalone" in text.lower():
-                child.setText(
-                    "<div style='line-height:160%;'>"
-                    + i18n.t("welcome_description").replace("\n", "<br>")
-                    + "</div>"
-                )
+        """Update all translatable text elements with current language."""
+        # Update subtitle
+        self._subtitle.setText("// " + i18n.t("welcome_subheading") + "  v" + config.APP_VERSION)
+        # Update body
+        self._body.setText(
+            "<div style='line-height:160%;'>"
+            + i18n.t("welcome_description").replace("\n", "<br>")
+            + "</div>"
+        )
+        # Update backup checkbox
+        self.backup_cb.setText(i18n.t("welcome_backup"))
+        # Update backup hint
+        self._backup_hint.setText(
+            "<span style='color:#7a6a9b; font-size:9pt;'>"
+            + i18n.t("welcome_backup_desc")
+            + "</span>"
+        )
 
     def initializePage(self):
         # Store backup preference on the wizard

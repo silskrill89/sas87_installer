@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWizardPage,
 )
 
-from .. import cache, util
+from .. import cache, util, i18n
 
 
 class CompletePage(QWizardPage):
@@ -23,10 +23,11 @@ class CompletePage(QWizardPage):
         layout.setSpacing(14)
         layout.setContentsMargins(40, 30, 40, 30)
 
-        title = QLabel("INSTALLATION  COMPLETE")
-        title.setProperty("heading", True)
-        title.setAlignment(Qt.AlignCenter)
-        layout.addWidget(title)
+        # Title
+        self._title = QLabel(i18n.t("complete_title"))
+        self._title.setProperty("heading", True)
+        self._title.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self._title)
 
         self.summary = QLabel("")
         self.summary.setWordWrap(True)
@@ -37,9 +38,10 @@ class CompletePage(QWizardPage):
 
         btn_row = QHBoxLayout()
 
-        launch_btn = QPushButton("Play GTA San Andreas Stories 1987")
-        launch_btn.setProperty("accent", True)
-        launch_btn.setStyleSheet("""
+        # Launch button
+        self._launch_btn = QPushButton(i18n.t("complete_launch"))
+        self._launch_btn.setProperty("accent", True)
+        self._launch_btn.setStyleSheet("""
             QPushButton {
                 background-color: #3d8a3d;
                 color: #ffffff;
@@ -60,16 +62,18 @@ class CompletePage(QWizardPage):
                 background-color: #2d6a2d;
             }
         """)
-        launch_btn.clicked.connect(self._launch)
-        btn_row.addWidget(launch_btn)
+        self._launch_btn.clicked.connect(self._launch)
+        btn_row.addWidget(self._launch_btn)
 
-        open_dest_btn = QPushButton("Open install folder")
-        open_dest_btn.clicked.connect(self._open_dest)
-        btn_row.addWidget(open_dest_btn)
+        # Open dest button
+        self._open_dest_btn = QPushButton(i18n.t("complete_open_dest"))
+        self._open_dest_btn.clicked.connect(self._open_dest)
+        btn_row.addWidget(self._open_dest_btn)
 
-        open_cache_btn = QPushButton("Open cache folder")
-        open_cache_btn.clicked.connect(self._open_cache)
-        btn_row.addWidget(open_cache_btn)
+        # Open cache button
+        self._open_cache_btn = QPushButton(i18n.t("complete_open_cache"))
+        self._open_cache_btn.clicked.connect(self._open_cache)
+        btn_row.addWidget(self._open_cache_btn)
 
         btn_row.addStretch()
 
@@ -77,14 +81,11 @@ class CompletePage(QWizardPage):
 
         layout.addStretch()
 
-        footer = QLabel(
-            "Tip: your standalone modded install is fully portable - copy the destination "
-            "folder anywhere. The original SA install was never modified. "
-            "Backups live at <code>" + cache.CACHE_BACKUPS + "</code>."
-        )
-        footer.setProperty("dim", True)
-        footer.setWordWrap(True)
-        layout.addWidget(footer)
+        # Footer
+        self._footer = QLabel(i18n.t("complete_tip"))
+        self._footer.setProperty("dim", True)
+        self._footer.setWordWrap(True)
+        layout.addWidget(self._footer)
 
     def initializePage(self):
         dest = self.wizard().property("dest_sa_root") or ""
@@ -133,3 +134,15 @@ class CompletePage(QWizardPage):
     def _open_cache(self):
         cache.ensure_dirs()
         util.open_in_file_manager(cache.CACHE_ROOT)
+
+    def initializePage(self):
+        """Connect to wizard's language_changed signal."""
+        self.wizard().language_changed.connect(self._on_language_changed)
+
+    def _on_language_changed(self, lang_code):
+        """Update all text when language changes."""
+        self._title.setText(i18n.t("complete_title"))
+        self._launch_btn.setText(i18n.t("complete_launch"))
+        self._open_dest_btn.setText(i18n.t("complete_open_dest"))
+        self._open_cache_btn.setText(i18n.t("complete_open_cache"))
+        self._footer.setText(i18n.t("complete_tip"))

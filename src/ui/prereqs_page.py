@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
     QPushButton, QRadioButton, QVBoxLayout, QWizardPage,
 )
 
-from .. import config, extractor, scraper
+from .. import config, extractor, scraper, i18n
 from .theme import COLOR_GROVE_GREEN_LIGHT, COLOR_TEXT_BRIGHT, COLOR_SUNSET_GOLD
 
 
@@ -36,47 +36,47 @@ class PrereqsPage(QWizardPage):
         layout.setSpacing(10)
         layout.setContentsMargins(40, 30, 40, 30)
 
-        title = QLabel("MODS  TO  INSTALL")
-        title.setProperty("subheading", True)
-        layout.addWidget(title)
+        # Title
+        self._title = QLabel(i18n.t("prereqs_title"))
+        self._title.setProperty("subheading", True)
+        layout.addWidget(self._title)
 
-        body = QLabel(
+        # Description
+        self._body = QLabel(
             "<div style='line-height:150%;'>"
-            "The wizard scans your folders for mod files. "
-            "Click <b>Download</b> on any missing mod to open its download page. "
-            "Click <b>Browse</b> to point to a file on disk."
-            "</div>"
+            + i18n.t("prereqs_desc")
+            + "</div>"
         )
-        body.setWordWrap(True)
-        body.setTextFormat(Qt.RichText)
-        layout.addWidget(body)
+        self._body.setWordWrap(True)
+        self._body.setTextFormat(Qt.RichText)
+        layout.addWidget(self._body)
 
         # --- Mod list ---
-        self.grid_box = QGroupBox("Mod list")
-        self.grid = QGridLayout(self.grid_box)
+        self._grid_box = QGroupBox(i18n.t("prereqs_title"))
+        self.grid = QGridLayout(self._grid_box)
         self.grid.setColumnStretch(3, 1)
-        layout.addWidget(self.grid_box)
+        layout.addWidget(self._grid_box)
 
         # --- Buttons ---
         btn_row = QHBoxLayout()
 
-        self.browse_btn = QPushButton("Browse for Files...")
-        self.browse_btn.setStyleSheet(
+        self._browse_btn = QPushButton(i18n.t("prereqs_browse"))
+        self._browse_btn.setStyleSheet(
             f"QPushButton {{ color: {COLOR_SUNSET_GOLD}; border-color: {COLOR_SUNSET_GOLD}; "
             f"padding: 8px 20px; font-size: 11pt; }} "
             f"QPushButton:hover {{ background-color: rgba(255,184,77,40); color: #ffffff; }}"
         )
-        self.browse_btn.clicked.connect(self._browse_for_files)
-        btn_row.addWidget(self.browse_btn)
+        self._browse_btn.clicked.connect(self._browse_for_files)
+        btn_row.addWidget(self._browse_btn)
 
-        self.rescan_btn = QPushButton("Rescan")
-        self.rescan_btn.setStyleSheet(
+        self._rescan_btn = QPushButton(i18n.t("prereqs_rescan"))
+        self._rescan_btn.setStyleSheet(
             f"QPushButton {{ color: #c0c0c0; border-color: #555; "
             f"padding: 8px 20px; font-size: 11pt; }} "
             f"QPushButton:hover {{ background-color: rgba(100,100,100,40); color: #ffffff; }}"
         )
-        self.rescan_btn.clicked.connect(lambda: self._rescrape(silent=True))
-        btn_row.addWidget(self.rescan_btn)
+        self._rescan_btn.clicked.connect(lambda: self._rescrape(silent=True))
+        btn_row.addWidget(self._rescan_btn)
 
         btn_row.addStretch()
         layout.addLayout(btn_row)
@@ -332,3 +332,19 @@ class PrereqsPage(QWizardPage):
     def nextId(self):
         from .wizard import PAGE_INSTALL
         return PAGE_INSTALL
+
+    def initializePage(self):
+        """Connect to wizard's language_changed signal."""
+        self.wizard().language_changed.connect(self._on_language_changed)
+
+    def _on_language_changed(self, lang_code):
+        """Update all text when language changes."""
+        self._title.setText(i18n.t("prereqs_title"))
+        self._body.setText(
+            "<div style='line-height:150%;'>"
+            + i18n.t("prereqs_desc")
+            + "</div>"
+        )
+        self._grid_box.setTitle(i18n.t("prereqs_title"))
+        self._browse_btn.setText(i18n.t("prereqs_browse"))
+        self._rescan_btn.setText(i18n.t("prereqs_rescan"))

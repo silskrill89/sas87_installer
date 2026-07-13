@@ -159,14 +159,15 @@ def _load_translations(lang_code: str) -> dict[str, str]:
 
     if os.path.isfile(lang_file):
         try:
-            with open(lang_file, "r", encoding="utf-8") as f:
+            # Handle UTF-8 BOM
+            with open(lang_file, "r", encoding="utf-8-sig") as f:
                 data = json.load(f)
             # Merge with defaults (English fallback for missing keys)
             result = dict(_DEFAULTS)
             result.update(data)
             return result
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"Error loading {lang_file}: {e}")
 
     # Fallback to English
     return dict(_DEFAULTS)

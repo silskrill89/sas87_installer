@@ -18,7 +18,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout, QWizardPage,
 )
 
-from .. import cache, config, installer_stages
+from .. import cache, config, installer_stages, i18n
 from ..installer_stages import InstallContext
 
 
@@ -41,9 +41,10 @@ class InstallPage(QWizardPage):
         layout.setSpacing(12)
         layout.setContentsMargins(40, 30, 40, 30)
 
-        title = QLabel("INSTALLING...")
-        title.setProperty("subheading", True)
-        layout.addWidget(title)
+        # Title
+        self._title = QLabel(i18n.t("install_title"))
+        self._title.setProperty("subheading", True)
+        layout.addWidget(self._title)
 
         self.stage_label = QLabel("Starting...")
         self.stage_label.setStyleSheet("color: #ffb84d; font-weight: bold;")
