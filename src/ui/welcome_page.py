@@ -13,38 +13,8 @@ class UpwardComboBox(QComboBox):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        # Style the popup list
-        self.setView(QListView())
-        self.setStyleSheet("""
-            QComboBox {
-                background-color: #1a1a2e;
-                color: #e0e0e0;
-                border: 1px solid #f0c060;
-                border-radius: 4px;
-                padding: 4px 8px;
-                font-size: 10pt;
-            }
-            QComboBox:hover {
-                border-color: #00d4aa;
-            }
-            QComboBox::drop-down {
-                border: 0;
-                width: 20px;
-                background: #1a1a2e;
-            }
-            QComboBox QAbstractItemView {
-                background-color: #1a1a2e;
-                color: #e0e0e0;
-                selection-background-color: #00d4aa;
-                selection-color: #ffffff;
-                border: 1px solid #f0c060;
-                outline: 0;
-            }
-            QComboBox QAbstractItemView::item {
-                padding: 6px 12px;
-                min-height: 24px;
-            }
-        """)
+        # Set minimum width
+        self.setMinimumWidth(180)
 
     def showPopup(self):
         # Position popup above the combo box
@@ -122,10 +92,6 @@ class WelcomePage(QWizardPage):
         lang_label.setStyleSheet("color: #999999; font-size: 10pt;")
         lang_row.addWidget(lang_label)
         self.lang_combo = UpwardComboBox()
-        self.lang_combo.setMinimumWidth(180)
-        self.lang_combo.setStyleSheet(
-            "QComboBox { font-size: 10pt; padding: 4px 8px; }"
-        )
         for code, name in i18n.get_available_languages().items():
             self.lang_combo.addItem(name, code)
         self.lang_combo.currentIndexChanged.connect(self._on_language_changed)

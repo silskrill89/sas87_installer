@@ -15,7 +15,7 @@ block_cipher = None
 # --- Data files to bundle ---
 datas = [
     ('data', 'data'),
-    ('fonts/PricedownBl.otf', 'fonts'),
+    ('fonts', 'fonts'),
     ('src/ui/splash', 'src/ui/splash'),
     ('CREDITS.md', '.'),
 ]
