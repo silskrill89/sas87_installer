@@ -4,7 +4,7 @@ from __future__ import annotations
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QCheckBox, QLabel, QVBoxLayout, QWizardPage
 
-from .. import config
+from .. import config, i18n
 from .theme import heading_font, body_font
 
 
@@ -26,7 +26,7 @@ class WelcomePage(QWizardPage):
         title.setStyleSheet("color: #ff6a2b;")
         layout.addWidget(title)
 
-        subtitle = QLabel("// INSTALLER WIZARD  v" + config.APP_VERSION)
+        subtitle = QLabel("// " + i18n.t("welcome_subheading") + "  v" + config.APP_VERSION)
         subtitle.setProperty("subheading", True)
         subtitle.setAlignment(Qt.AlignCenter)
         subtitle.setStyleSheet("color: #3d8a3d; letter-spacing: 4px;")
@@ -36,15 +36,8 @@ class WelcomePage(QWizardPage):
 
         body = QLabel(
             "<div style='line-height:160%;'>"
-            "This wizard builds a <b>standalone, portable modded San Andreas</b> folder. "
-            "It will:<br><br>"
-            "&nbsp;&nbsp;1. <b>Locate</b> your GTA San Andreas install<br>"
-            "&nbsp;&nbsp;2. <b>Copy</b> your vanilla SA files to a new destination "
-            "(original stays untouched)<br>"
-            "&nbsp;&nbsp;3. <b>Download</b> the GTA SAS 1987 main mod + optional "
-            "prereqs (CLEO, DYOM, etc.)<br>"
-            "&nbsp;&nbsp;4. <b>Install</b> everything into the destination in the right order"
-            "</div>"
+            + i18n.t("welcome_description").replace("\n", "<br>")
+            + "</div>"
         )
         body.setWordWrap(True)
         body.setAlignment(Qt.AlignLeft)
@@ -53,9 +46,7 @@ class WelcomePage(QWizardPage):
 
         # Backup option
         layout.addSpacing(10)
-        self.backup_cb = QCheckBox(
-            "Back up original files before installing"
-        )
+        self.backup_cb = QCheckBox(i18n.t("welcome_backup"))
         self.backup_cb.setChecked(False)
         self.backup_cb.setStyleSheet(
             "QCheckBox { color: #c0c0c0; font-size: 10pt; spacing: 8px; }"
@@ -65,10 +56,8 @@ class WelcomePage(QWizardPage):
 
         backup_hint = QLabel(
             "<span style='color:#7a6a9b; font-size:9pt;'>"
-            "Only tick this if you are using a <b>non-vanilla</b> (previously modded) "
-            "copy of GTA San Andreas. For clean/vanilla installs, backup is not needed — "
-            "the wizard will skip it automatically."
-            "</span>"
+            + i18n.t("welcome_backup_desc")
+            + "</span>"
         )
         backup_hint.setWordWrap(True)
         backup_hint.setTextFormat(Qt.RichText)
