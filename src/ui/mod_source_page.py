@@ -51,17 +51,17 @@ class ModSourcePage(QWizardPage):
         choice_box = QGroupBox("Choose one")
         choice_layout = QVBoxLayout(choice_box)
 
-        self.rb_have = QRadioButton(
-            "<b>I already have mod files</b><br>"
-            "<span style='color:#7a6a9b'>You have .zip / .rar / .7z archives of the mods "
-            "already. The wizard will scan a folder and use them instead of downloading.</span>"
+        self.rb_have = QRadioButton("I already have mod files")
+        self.rb_have.setToolTip(
+            "You have .zip / .rar / .7z archives of the mods already. "
+            "The wizard will scan a folder and use them instead of downloading."
         )
         choice_layout.addWidget(self.rb_have)
 
-        self.rb_download = QRadioButton(
-            "<b>Download everything for me</b><br>"
-            "<span style='color:#7a6a9b'>The wizard will fetch the main mod from MediaFire "
-            "and prerequisites from GitHub/MixMods.</span>"
+        self.rb_download = QRadioButton("Download everything for me")
+        self.rb_download.setToolTip(
+            "The wizard will fetch the main mod from MediaFire "
+            "and prerequisites from GitHub/MixMods."
         )
         choice_layout.addWidget(self.rb_download)
 
