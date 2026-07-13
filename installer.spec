@@ -161,7 +161,6 @@ a = Analysis(
         'unittest', 'test', 'doctest',
         'pydoc', 'pdb', 'profile', 'cProfile',
         'xmlrpc', 'wsgiref',
-        'multiprocessing',
         'py_compile', 'compileall',
     ],
     win_no_prefer_redirects=False,
