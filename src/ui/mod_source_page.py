@@ -68,7 +68,7 @@ class ModSourcePage(QWizardPage):
         self._choice_group.addButton(self.rb_download, 2)
         self._choice_group.buttonClicked.connect(self._on_choice_changed)
 
-        layout.addWidget(choice_box)
+        layout.addWidget(self._choice_box)
 
         # --- Archives folder (only visible if "I have mods" selected) ---
         self.arch_box = QGroupBox("Archives folder")
@@ -121,7 +121,7 @@ class ModSourcePage(QWizardPage):
         self.dl_status = QLabel("")
         self.dl_status.setWordWrap(True)
         dl_layout.addWidget(self.dl_status)
-        layout.addWidget(dl_box)
+        layout.addWidget(self._dl_box)
 
         layout.addStretch()
 
