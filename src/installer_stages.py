@@ -339,11 +339,17 @@ def stage_install_mod(
     # ---- 3. Merge into DEST root (not source!) ------------------------
     progress(stage_id, f"Installing {mod.name} into destination...", 90)
     log.info("[%s] Merging %s -> %s", mod.id, extracted_dir, ctx.dest_sa_root)
+
+    def _merge_progress(current, total):
+        pct = 90 + int(current * 9 / max(total, 1))
+        progress(stage_id, f"Copying {mod.name}: {current}/{total} files", pct)
+
     try:
         count = extractor.merge_into_sa_root(
             extracted_dir,
             ctx.dest_sa_root,
             pick_paths=mod.pick_paths or None,
+            progress=_merge_progress,
         )
     except Exception as e:
         # Fallback: try file-by-file copy from extracted cache
@@ -356,6 +362,7 @@ def stage_install_mod(
             return False
 
     progress(stage_id, f"Done: {mod.name} ({count} files).", 100)
+    log.info("[%s] Merged %d files", mod.id, count)
     ctx.installed_mods.append(mod.id)
     return True
 

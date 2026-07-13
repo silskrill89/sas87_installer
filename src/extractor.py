@@ -304,6 +304,7 @@ def merge_into_sa_root(
     extracted_dir: str,
     sa_root: str,
     pick_paths: Optional[list[str]] = None,
+    progress: Optional[Callable[[int, int], None]] = None,
 ) -> int:
     """Copy extracted files into the SA root.
 
@@ -317,7 +318,10 @@ def merge_into_sa_root(
 
     Returns the number of files copied.
     """
+    # Count total files first for progress reporting
+    total_files = sum(len(files) for _, _, files in os.walk(extracted_dir))
     count = 0
+
     if pick_paths:
         for rel in pick_paths:
             src = os.path.join(extracted_dir, rel)
@@ -326,16 +330,23 @@ def merge_into_sa_root(
                 continue
             dst = os.path.join(sa_root, rel)
             if os.path.isdir(src):
-                count += _copy_tree(src, dst)
+                for root, _dirs, files in os.walk(src):
+                    for name in files:
+                        src_file = os.path.join(root, name)
+                        rel_path = os.path.relpath(src_file, src)
+                        dst_file = os.path.join(dst, rel_path)
+                        os.makedirs(os.path.dirname(dst_file), exist_ok=True)
+                        shutil.copy2(src_file, dst_file)
+                        count += 1
+                        if progress and count % 100 == 0:
+                            progress(count, total_files)
             else:
                 os.makedirs(os.path.dirname(dst), exist_ok=True)
                 shutil.copy2(src, dst)
-                log.info("Merged file: %s -> %s", src, dst)
                 count += 1
     else:
         for entry in os.listdir(extracted_dir):
             src = os.path.join(extracted_dir, entry)
-            # Route mod files to correct subdirectories
             if os.path.isfile(src):
                 ext_lower = os.path.splitext(entry)[1].lower()
                 if ext_lower in (".cleo", ".cs", ".cs4"):
@@ -345,16 +356,21 @@ def merge_into_sa_root(
                 else:
                     dst = os.path.join(sa_root, entry)
                 os.makedirs(os.path.dirname(dst), exist_ok=True)
-                # Use smart_overwrite - skip if identical, backup if different
-                if not smart_overwrite(src, dst):
-                    log.warning("Failed to copy %s", src)
-                else:
-                    log.debug("Merged: %s -> %s", os.path.basename(src), dst)
+                shutil.copy2(src, dst)
                 count += 1
             else:
                 dst = os.path.join(sa_root, entry)
-                log.info("Merging dir: %s -> %s", src, dst)
-                count += _copy_tree(src, dst)
+                for root, _dirs, files in os.walk(src):
+                    rel = os.path.relpath(root, src)
+                    target_dir = dst if rel == "." else os.path.join(dst, rel)
+                    os.makedirs(target_dir, exist_ok=True)
+                    for name in files:
+                        src_file = os.path.join(root, name)
+                        dst_file = os.path.join(target_dir, name)
+                        shutil.copy2(src_file, dst_file)
+                        count += 1
+                        if progress and count % 100 == 0:
+                            progress(count, total_files)
     return count
 
 
