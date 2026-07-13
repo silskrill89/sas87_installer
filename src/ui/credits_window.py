@@ -207,7 +207,7 @@ class CreditsWindow(QDialog):
             # Section header
             hdr = QLabel(section_name)
             hdr.setStyleSheet(
-                f"color: {_GOLD}; font-size: 12px; font-weight: bold; "
+                f"color: {_GOLD}; font-size: 14px; font-weight: bold; "
                 f"letter-spacing: 3px; padding-top: 10px; background: transparent;"
             )
             cl.addWidget(hdr)
@@ -221,14 +221,14 @@ class CreditsWindow(QDialog):
                 # Name (left)
                 name_lbl = QLabel(name)
                 name_lbl.setStyleSheet(
-                    f"color: {_TEXT}; font-size: 12px; font-weight: bold; background: transparent;"
+                    f"color: {_TEXT}; font-size: 14px; font-weight: bold; background: transparent;"
                 )
                 row.addWidget(name_lbl)
 
                 # Role (middle, dimmed)
                 if role:
                     role_lbl = QLabel(f"  — {role}")
-                    role_lbl.setStyleSheet(f"color: {_TEXT_DIM}; font-size: 11px; background: transparent;")
+                    role_lbl.setStyleSheet(f"color: {_TEXT_DIM}; font-size: 13px; background: transparent;")
                     row.addWidget(role_lbl)
 
                 row.addStretch()
@@ -237,7 +237,7 @@ class CreditsWindow(QDialog):
                 if url and link_label:
                     link_btn = QPushButton(link_label)
                     link_btn.setStyleSheet(
-                        f"color: {_TEAL}; font-size: 11px; background: transparent; "
+                        f"color: {_TEAL}; font-size: 13px; background: transparent; "
                         f"border: none; text-decoration: underline; padding: 0;"
                     )
                     link_btn.setCursor(Qt.PointingHandCursor)
