@@ -176,28 +176,21 @@ pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 exe = EXE(
     pyz,
     a.scripts,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
     [],
-    exclude_binaries=True,
     name='GTA_SAS_1987_Installer',
     debug=False,
     bootloader_ignore_signals=False,
     strip=True,
     upx=True,
+    upx_exclude=['qwindows.dll', 'qjpeg.dll', 'qico.dll'],
+    runtime_tmpdir=None,
     console=False,
     disable_windowed_traceback=False,
     target_arch='x86_64',
     codesign_identity=None,
     entitlements_file=None,
     icon='src/resources/icon.ico' if os.path.exists('src/resources/icon.ico') else None,
-)
-
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
-    strip=True,
-    upx=True,
-    upx_exclude=[],
-    name='GTA_SAS_1987_Installer',
 )
