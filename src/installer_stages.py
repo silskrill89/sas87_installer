@@ -285,27 +285,30 @@ def stage_install_mod(
             return False
 
     # ---- 2. Extract or copy loose mod file -------------------------------
-    # Loose mod files (.cleo, .cs, .asi) should be copied directly,
-    # not extracted as archives.
+    # Non-archive files (.cleo, .cs, .asi, .dll, etc.) should be copied directly.
+    # Only archives (.zip, .rar, .7z) need extraction.
     archive_ext = os.path.splitext(archive_path)[1].lower()
-    if archive_ext in extractor.supported_mod_extensions():
+    if not extractor.is_archive(archive_path):
         progress(stage_id, f"Installing {mod.name}...", 80)
-        log.info("[%s] Loose mod file, copying directly: %s", mod.id, archive_path)
+        log.info("[%s] Non-archive file, copying directly: %s", mod.id, archive_path)
         try:
-            if archive_ext == ".cleo":
+            # Determine destination based on file type
+            if archive_ext in (".cleo", ".cs", ".cs4"):
                 dest_dir = os.path.join(ctx.dest_sa_root, "CLEO")
-            elif archive_ext == ".cs":
-                dest_dir = os.path.join(ctx.dest_sa_root, "CLEO")
+            elif archive_ext == ".asi":
+                dest_dir = ctx.dest_sa_root
             else:
+                # Other files go to SA root
                 dest_dir = ctx.dest_sa_root
             os.makedirs(dest_dir, exist_ok=True)
             dest_file = os.path.join(dest_dir, os.path.basename(archive_path))
-            import shutil
-            shutil.copy2(archive_path, dest_file)
+            # Use smart_overwrite to handle existing files
+            from .extractor import smart_overwrite
+            smart_overwrite(archive_path, dest_file)
             log.info("[%s] Copied %s -> %s", mod.id, archive_path, dest_file)
         except Exception as e:
             progress(stage_id, f"Install failed: {e}", 100)
-            log.exception("Loose mod copy failed for %s", mod.id)
+            log.exception("File copy failed for %s", mod.id)
             ctx.failed_mods.append(mod.id)
             return False
         progress(stage_id, f"Done: {mod.name} (1 file).", 100)
