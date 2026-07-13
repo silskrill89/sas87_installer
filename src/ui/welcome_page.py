@@ -1,11 +1,25 @@
 """Welcome page — title, language selector, mod description, start button."""
 from __future__ import annotations
 
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QCheckBox, QComboBox, QHBoxLayout, QLabel, QVBoxLayout, QWizardPage
+from PySide6.QtCore import Qt, QPropertyAnimation, QPoint
+from PySide6.QtWidgets import QCheckBox, QComboBox, QHBoxLayout, QLabel, QVBoxLayout, QWizardPage, QListView
 
 from .. import config, i18n
 from .theme import heading_font, body_font
+
+
+class UpwardComboBox(QComboBox):
+    """QComboBox that opens its popup upward instead of downward."""
+
+    def showPopup(self):
+        # Position popup above the combo box
+        popup = self.view()
+        popup.setUniformItemSizes(True)
+        # Calculate position above
+        pos = self.mapToGlobal(QPoint(0, 0))
+        popup_height = popup.sizeHint().height()
+        popup.move(pos.x(), pos.y() - popup_height)
+        super().showPopup()
 
 
 class WelcomePage(QWizardPage):
@@ -19,22 +33,21 @@ class WelcomePage(QWizardPage):
         layout.setSpacing(14)
         layout.setContentsMargins(40, 30, 40, 30)
 
-        # Language selector (top right)
-        lang_row = QHBoxLayout()
-        lang_row.addStretch()
-        lang_label = QLabel("Language:")
-        lang_label.setStyleSheet("color: #999999; font-size: 10pt;")
-        lang_row.addWidget(lang_label)
-        self.lang_combo = QComboBox()
-        self.lang_combo.setMinimumWidth(180)
-        self.lang_combo.setStyleSheet(
-            "QComboBox { font-size: 10pt; padding: 4px 8px; }"
-        )
-        for code, name in i18n.get_available_languages().items():
-            self.lang_combo.addItem(name, code)
-        self.lang_combo.currentIndexChanged.connect(self._on_language_changed)
-        lang_row.addWidget(self.lang_combo)
-        layout.addLayout(lang_row)
+        # Title
+        title = QLabel("GTA SAN ANDREAS\nSTORIES  1987")
+        title.setProperty("heading", True)
+        title.setFont(heading_font(38))
+        title.setAlignment(Qt.AlignCenter)
+        title.setStyleSheet("color: #ff6a2b;")
+        layout.addWidget(title)
+
+        subtitle = QLabel("// " + i18n.t("welcome_subheading") + "  v" + config.APP_VERSION)
+        subtitle.setProperty("subheading", True)
+        subtitle.setAlignment(Qt.AlignCenter)
+        subtitle.setStyleSheet("color: #3d8a3d; letter-spacing: 4px;")
+        layout.addWidget(subtitle)
+
+        layout.addSpacing(10)
 
         # Title
         title = QLabel("GTA SAN ANDREAS\nSTORIES  1987")
@@ -84,6 +97,24 @@ class WelcomePage(QWizardPage):
 
         layout.addStretch()
 
+        # Language selector (bottom left)
+        lang_row = QHBoxLayout()
+        lang_label = QLabel("Language:")
+        lang_label.setStyleSheet("color: #999999; font-size: 10pt;")
+        lang_row.addWidget(lang_label)
+        self.lang_combo = UpwardComboBox()
+        self.lang_combo.setMinimumWidth(180)
+        self.lang_combo.setStyleSheet(
+            "QComboBox { font-size: 10pt; padding: 4px 8px; }"
+        )
+        for code, name in i18n.get_available_languages().items():
+            self.lang_combo.addItem(name, code)
+        self.lang_combo.currentIndexChanged.connect(self._on_language_changed)
+        lang_row.addWidget(self.lang_combo)
+        lang_row.addStretch()
+        layout.addLayout(lang_row)
+
+        # Footer
         footer = QLabel(
             "Fan-made installer. Not affiliated with Rockstar Games or Take-Two. "
             "You must own a legal copy of GTA San Andreas."
