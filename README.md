@@ -36,11 +36,13 @@ Installing GTA mods shouldn't require a CS degree. We built this wizard so you c
 
 **Step 3:** We handle everything:
 - Copy your vanilla SA to the new folder
-- Download & install CLEO 5, CLEO+, NewOpcodes
+- Download & install available mods
 - Install the full GTA SAS 1987 modpack
 - Back up your fresh install before touching anything
 
-**Step 4:** Hit Launch. You're playing.
+**Step 4:** Hit Play. You're playing.
+
+> **Note:** Some mods require manual download due to creator hosting preferences. Links and credits are provided in the installer to respect the wishes of original mod creators.
 
 ---
 
